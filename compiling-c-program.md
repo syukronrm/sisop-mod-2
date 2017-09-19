@@ -1,6 +1,6 @@
 # Compiling C Program
 
-Your C code
+### Your C code
 
 `my-program.c`
 ```C
@@ -12,7 +12,7 @@ int main(){
 }
 ```
 
-Compiling
+### Compiling
 
 `gcc -o {outfile} {infile}`
 
@@ -20,7 +20,12 @@ Compiling
 gcc -o program my-program.c
 ```
 
-Execute
+### Execute
 ```
 ./program
+```
+
+### Result
+```
+Hello World!
 ```
