@@ -1,5 +1,7 @@
 # Compiling C Program
 
+Your C code
+
 `my-program.c`
 ```C
 #include <stdio.h>
