@@ -117,6 +117,11 @@ Proses dapat dibuat menggunakan dua cara (pada C), yaitu dengan `system()` atau 
 
 ### Useful things
 #### Get all libraries documentation (and functions)
-`apt-get install manpages-posix-dev`
+```
+apt-get install manpages-posix-dev
 
-`man popen`
+man {anything-you-want-to-know}
+man fopen
+man fclose
+man unistd.h
+```
