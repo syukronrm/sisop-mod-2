@@ -1,9 +1,9 @@
 # Modul 2
 Proses dan Daemon
 
-## Process
+## 1 Process
 
-### Process
+### 1.1 Process
 TL; DR.
 
 Program yang sedang berjalan disebut dengan proses. 
@@ -15,7 +15,7 @@ Jalankan:
 $ xlogo
 ```
 
-### Process ID
+### 1.2 Process ID
 Setiap proses memiliki dikenali dengan _Process ID_/_pid_. Setiap proses memiliki _Parent Process ID_/_ppid_, kecuali proses `init` atau `systemd`. 
 
 Jalankan: 
@@ -52,7 +52,7 @@ The process ID is 8295
 The parent process ID is 29043
 ```
 
-### Melihat Proses
+### 1.3 Melihat Proses
 Jalankan program
 
 ```bash
@@ -69,13 +69,13 @@ $ ps -e -o pid,ppid,command
    10     2 [lru-add-drain]
    11     2 [watchdog/0]
  .......
- long list
+ (long list)
  .......
  3760  2684 /usr/lib/x86_64-linux-gnu/notify-osd
  3789  2684 /opt/google/chrome/chrome
 ```
 
-### Membunuh Proses
+### 1.4 Membunuh Proses
 Membunuh proses menggunakan `$ kill {pid}`
 
 Contoh: 
@@ -83,36 +83,85 @@ Contoh:
 $ kill 3789
 ```
 
-### Membuat Proses
+### 1.5 Membuat Proses
 Proses dapat dibuat menggunakan dua cara (pada C), yaitu dengan `system()` atau `fork()` & `exec()`
 
-1. Menggunakan `system()`
-   Ketika `system()` dijakankan, ia akan memanggil standard shell (`/bin/bash`) dan menjalankan perintah yang diminta.
-
-   Contoh
-
-   ```C
-   #include <stdlib.h>
-
-   int main() {
-     int return_value;
-     return_value = system("ls -l /");
-     return return_value;
-   }
-   ```
+#### 1.5.1 Menggunakan `system()`
    
-   Hasil
-   
-   ```
-   total 156
-   drwxr-xr-x   2 root root  4096 Sep 14 06:35 bin
-   drwxr-xr-x   4 root root  4096 Sep 20 00:24 boot
-   drwxrwxr-x   2 root root  4096 Agu 14 14:05 cdrom
-   drwxr-xr-x   3 root root  4096 Sep 12 19:11 data
-   (long list)
-   ```
+Ketika `system()` dijakankan, ia akan memanggil standard shell (`/bin/bash`) dan menjalankan perintah yang diminta.
 
-2. Menggunakan `fork()` dan `exec()`
+Contoh
+
+```C
+#include <stdlib.h>
+
+int main() {
+  int return_value;
+  return_value = system("ls -l /");
+  return return_value;
+}
+```
+   
+Hasil
+   
+```
+total 156
+drwxr-xr-x   2 root root  4096 Sep 14 06:35 bin
+drwxr-xr-x   4 root root  4096 Sep 20 00:24 boot
+drwxrwxr-x   2 root root  4096 Agu 14 14:05 cdrom
+drwxr-xr-x   3 root root  4096 Sep 12 19:11 data
+(long list)
+```
+
+#### 1.5.1 Menggunakan `fork()` dan `exec()`
+   
+TL;DR.  
+`fork()` digunakan untuk menduplikasi program yang sedang berjalan.  
+`exec()` digunakan untuk mengganti program yang sedang berjalan dengan program yang baru.  
+
+##### `fork()` explained
+
+Ketika `fork()` dijalankan, proses baru yang disebut _child process_ akan dibuat. _Parent process_ tetap berjalan dan _child process_ mulai dibuat dan berjalan ketika function `fork()` dipanggil.
+
+```C
+int main() { 
+                            pid: 23, ppid: 10 
+                             [Main process]
+                                 |
+  fork();              > Child process created <
+                                 /\
+                               /    \
+                             /        \
+               pid: 23, ppid: 10    pid: 30, ppid: 23
+                [Parent Process]    [Child Process]
+
+      
+  return 0;
+}
+```
+
+Real code:
+```C
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+int main() {
+  pid_t child_pid;
+
+  printf("The main program PID is %d\n\n", (int) getpid());
+
+  child_pid = fork();
+  if (child_pid != 0) {
+    printf("This is the parent process, with PID %d\n", (int) getpid());
+    printf("The child's PID is %d\n", (int) child_pid);
+  } else {
+    printf("This is the child process, with PID %d\n", (int) getpid());
+  }
+
+  return 0;
+}
+```
 
 
 ### Useful things
