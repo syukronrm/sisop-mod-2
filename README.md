@@ -102,7 +102,7 @@ $ kill 3789
 ```
 
 ### 1.5 Membuat Proses
-Proses dapat dibuat menggunakan dua cara (pada C), yaitu dengan `system()` atau `fork()` & `exec()`
+Proses dapat dibuat menggunakan dua cara (pada C), yaitu dengan `system()` atau `fork` & `exec`
 
 #### 1.5.1 Menggunakan `system()`
    
@@ -131,15 +131,15 @@ drwxr-xr-x   3 root root  4096 Sep 12 19:11 data
 (long list)
 ```
 
-#### 1.5.2 Menggunakan `fork()` dan `exec()`
+#### 1.5.2 Menggunakan `fork` dan `exec`
    
 TL;DR.  
-`fork()` digunakan untuk menduplikasi program yang sedang berjalan.  
-`exec()` digunakan untuk mengganti program yang sedang berjalan dengan program yang baru.  
+`fork` digunakan untuk menduplikasi program yang sedang berjalan.  
+`exec` digunakan untuk mengganti program yang sedang berjalan dengan program yang baru.  
 
-#### A. `fork()` explained
+#### A. `fork` explained
 
-Ketika `fork()` dijalankan, proses baru yang disebut _child process_ akan dibuat. _Parent process_ tetap berjalan dan _child process_ mulai dibuat dan berjalan ketika function `fork()` dipanggil.
+Ketika `fork` dijalankan, proses baru yang disebut _child process_ akan dibuat. _Parent process_ tetap berjalan dan _child process_ mulai dibuat dan berjalan ketika function `fork` dipanggil.
 
 ```C
 int main() { 
@@ -185,12 +185,12 @@ __Explanation__
 
 Lengkapi guys
 
-#### B. `exec()` explained
+#### B. `exec` explained
 
 Diisi ya penjelasannya  
 Halaman 6 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf
 
-#### C. `fork()` and `exec()` explained!
+#### C. `fork` and `exec` explained!
 __Permasalahan:__  
 Bagaimana cara membuat program yang menjalankan suatu proses tanpa menghentikan program?
 
@@ -198,13 +198,13 @@ __Contoh permasalahan:__
 Bagaimana cara menjalankan `ls -l /`, lalu menjalankan `mkdir ~/sisop` dalam satu program?
 
 __Solusi:__  
-Gunakan `fork()`, `exec()`, dan `wait()`!
+Gunakan `fork`, `exec`, dan `wait`!
 
 TL;DR.  
 Buat sebuah program dengan:  
-1. Buat proses baru dengan `fork()`
-2. Kalankan `exec("ls -l /")` pada child process
-3. Buat parent process menunggu (`wait`) hingga proses `exec()` pada child selesai
+1. Buat proses baru dengan `fork`
+2. Jalankan `exec` yang memanggil `ls -l /` pada child process
+3. Buat parent process menunggu (`wait`) hingga proses `exec` pada child selesai
 4. Setelah child selesai, jalankan `exec("mkdir ~/sisop")` pada parent.
 
 Diisi ya penjelasannya  
