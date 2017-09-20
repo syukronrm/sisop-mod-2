@@ -181,25 +181,73 @@ Lengkapi guys
 
 #### B. `exec` explained
 
+
 Diisi ya penjelasannya  
 Halaman 6 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf
 
+Example: [exec-sample.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-exec.c)
+
 #### C. `fork` and `exec` explained!
-__Permasalahan:__  
-Bagaimana cara membuat program yang menjalankan suatu proses tanpa menghentikan program?
+__Permasalahan:__
+Bagaimana cara menjalankan dua proses dalam satu program?
 
-__Contoh permasalahan:__  
-Bagaimana cara menjalankan `ls`, lalu menjalankan `mkdir` dalam satu program?
+__Contoh Permasalahan:__
+Bagaimana cara membuat folder `~/sisop` dan membuat file kosong bernama `~/process.c`?
 
-__Solusi:__  
+Maka, bagaimana cara menjalankan `mkdir` __dan__ `touch` dalam satu program?
+
+__Solusi:__
 Gunakan `fork` dan `exec`!
 
 TL;DR.  
 Buat sebuah program dengan:  
 1. Buat proses baru dengan `fork`
-2. Jalankan `exec` yang memanggil `ls` pada child process
+2. Jalankan `exec` yang memanggil `mkdir` pada child process
+3. Jalankan `exec` yang memanggil `touch` pada parent process
+
+Visualisasi
+```
++--------+
+| pid=7  |
+| ppid=4 |
+| bash   |
++--------+
+    |
+    | calls fork
+    V                         
++--------+                     +--------+
+| pid=7  |    forks            | pid=22 |
+| ppid=4 | ------------------> | ppid=7 |
+| bash   |                     | bash   |
++--------+                     +--------+
+    |                              |
+    | calls exec to run touch      | calls exec to run mkdir
+    |                              |
+    V                              V
+```
+
+Example: [sample-fork-exec.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-fork-exec.c)
+
+#### D. `wait` explained!
+
+`wait` adalah function yang digunakan untuk memblock program yang sedang berjalan hingga proses child processnya berhenti.
+
+__Permasalahan:__  
+Bagaimana cara membuat program yang menjalankan suatu proses tanpa menghentikan program?
+
+__Contoh permasalahan:__  
+Bagaimana cara membuat folder `~/sisop` dan membuat file kosong bernama `~/process.c` __di dalamnya__?
+
+Maka, bagaimana cara menjalankan `mkdir` __lalu__ menjalankan `touch` dalam satu program?
+
+__Solusi:__  
+Gunakan `fork`, `exec`, dan `wait`!
+
+Buat sebuah program dengan:  
+1. Buat proses baru dengan `fork`
+2. Jalankan `exec` yang memanggil `mkdir` pada child process
 3. Buat parent process menunggu (`wait`) hingga proses pada child selesai
-4. Setelah child selesai, jalankan `exec` yang memanggil `mkdir` pada parent
+4. Setelah child selesai, jalankan `exec` yang memanggil `touch` pada parent
 
 Visualisasi
 ```
@@ -217,7 +265,7 @@ Visualisasi
 | bash   |             | bash   |
 +--------+             +--------+
     |                      |
-    | waits for pid 22     | calls exec to run ls
+    | waits for pid 22     | calls exec to run mkdir
     |                      V
     |                  +--------+
     |                  | pid=22 |
@@ -230,14 +278,28 @@ Visualisasi
 | bash   |
 +--------+
     |
-    | calls exec to run mkdir
+    | calls exec to run touch
     |
     V
 ```
-Sumber: [source](https://stackoverflow.com/questions/1653340/differences-between-fork-and-exec)
 
-Lengkapi ya
-Halaman 6 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf
+Example: [sample-fork-exec-wait.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-fork-exec-wait.c)
+
+## 1.6 Jenis-Jenis Proses
+### 1.6.1 Zombie Process
+Zombie process adalah
+
+### 1.6.2 Orphan Process
+Orphan process adalah
+
+### 1.6.3 Daemon Process
+Daemon process adalah
+
+
+## 2. Daemon
+### 2.1 Daemon
+Daemon adalah 
+### 2.2 Membuat Daemon
 
 
 # Appendix
@@ -257,4 +319,4 @@ https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
 https://notes.shichao.io/apue/  
 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf  
 http://www.linuxzasve.com/preuzimanje/TLCL-09.12.pdf  
-
+https://stackoverflow.com/questions/1653340/differences-between-fork-and-exec
