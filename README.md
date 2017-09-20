@@ -125,7 +125,7 @@ TL;DR.
 `fork()` digunakan untuk menduplikasi program yang sedang berjalan.  
 `exec()` digunakan untuk mengganti program yang sedang berjalan dengan program yang baru.  
 
-#### `fork()` explained
+#### A. `fork()` explained
 
 Ketika `fork()` dijalankan, proses baru yang disebut _child process_ akan dibuat. _Parent process_ tetap berjalan dan _child process_ mulai dibuat dan berjalan ketika function `fork()` dipanggil.
 
@@ -171,13 +171,13 @@ int main() {
 
 Lengkapi!
 
-#### `exec()` explained
+#### B. `exec()` explained
 
 Diisi ya penjelasannya
 
 Halaman 6 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf
 
-#### `fork()` and `exec()` explained!
+#### C. `fork()` and `exec()` explained!
 __Permasalahan:__  
 Bagaimana cara membuat program yang menjalankan suatu proses tanpa menghentikan program?
 
