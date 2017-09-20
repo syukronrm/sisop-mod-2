@@ -119,13 +119,13 @@ drwxr-xr-x   3 root root  4096 Sep 12 19:11 data
 (long list)
 ```
 
-#### 1.5.1 Menggunakan `fork()` dan `exec()`
+#### 1.5.2 Menggunakan `fork()` dan `exec()`
    
 TL;DR.  
 `fork()` digunakan untuk menduplikasi program yang sedang berjalan.  
 `exec()` digunakan untuk mengganti program yang sedang berjalan dengan program yang baru.  
 
-##### `fork()` explained
+#### `fork()` explained
 
 Ketika `fork()` dijalankan, proses baru yang disebut _child process_ akan dibuat. _Parent process_ tetap berjalan dan _child process_ mulai dibuat dan berjalan ketika function `fork()` dipanggil.
 
@@ -169,7 +169,30 @@ int main() {
 }
 ```
 
+Lengkapi!
 
+#### `exec()` explained
+
+Diisi ya penjelasannya
+
+Halaman 6 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf
+
+#### `fork()` and `exec()` explained!
+__Permasalahan:__  
+Bagaimana cara membuat program yang menjalankan suatu proses tanpa menghentikan program?
+
+__Contoh permasalahan:__  
+Bagaimana cara menjalankan `ls -l /`, lalu menjalankan `mkdir ~/sisop` dalam satu program?
+
+__Solusi:__  
+Gunakan `fork()` dan `exec()`!
+
+Diisi ya penjelasannya
+
+Halaman 6 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf
+
+
+# Appendix
 ### Useful things
 #### Get all libraries documentation (and functions)
 ```
