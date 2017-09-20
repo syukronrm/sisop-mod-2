@@ -29,17 +29,19 @@ Jalankan:
 $ pstree
 ```
 ```
-systemd-+-ModemManager-+-{gdbus}
-        |              `-{gmain}
-        |-NetworkManager-+-dhclient
-        |                |-dnsmasq
-        |                |-{gdbus}
-        |                `-{gmain}
-        |-accounts-daemon-+-{gdbus}
-        |                 `-{gmain}
-        |-acpid
-        |-agetty
+init-+-acpid
+     |-apache2---7*[apache2]
+     |-atd
+     |-cron
+     |-dbus-daemon
+     |-dockerd-+-docker-containe---10*[{docker-containe}]
+     |         `-10*[{dockerd}]
+     |-fail2ban-server---2*[{fail2ban-server}]
+     |-freshclam
 ```
+
+__Explanation__
+  - [pstree](https://linux.die.net/man/1/pstree): ...
 
 Contoh program `demo-process.c`
 ```C
@@ -57,6 +59,10 @@ Hasil
 The process ID is 8295
 The parent process ID is 29043
 ```
+__Explanation__
+  - getpid(): ...
+  - getppid(): ...
+
 
 ### 1.3 Melihat Proses
 Jalankan program
@@ -81,6 +87,12 @@ $ ps -e -o pid,ppid,command
  3789  2684 /opt/google/chrome/chrome
 ```
 
+__Explanation__
+  - ps: ...
+  - -e: ...
+  - -o: ...
+
+
 ### 1.4 Membunuh Proses
 Membunuh proses menggunakan `$ kill {pid}`
 
@@ -94,7 +106,7 @@ Proses dapat dibuat menggunakan dua cara (pada C), yaitu dengan `system()` atau 
 
 #### 1.5.1 Menggunakan `system()`
    
-Ketika `system()` dijakankan, ia akan memanggil standard shell (`/bin/bash`) dan menjalankan perintah yang diminta.
+Ketika `system()` dijalankan, ia akan memanggil standard shell (`/bin/bash`) dan menjalankan perintah yang diminta.
 
 Contoh
 
@@ -141,7 +153,6 @@ int main() {
                pid: 23, ppid: 10    pid: 30, ppid: 23
                 [Parent Process]    [Child Process]
 
-      
   return 0;
 }
 ```
@@ -168,13 +179,14 @@ int main() {
   return 0;
 }
 ```
+__Explanation__
+  - 
 
-Lengkapi!
+Lengkapi guys
 
 #### B. `exec()` explained
 
-Diisi ya penjelasannya
-
+Diisi ya penjelasannya  
 Halaman 6 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf
 
 #### C. `fork()` and `exec()` explained!
@@ -187,10 +199,8 @@ Bagaimana cara menjalankan `ls -l /`, lalu menjalankan `mkdir ~/sisop` dalam sat
 __Solusi:__  
 Gunakan `fork()` dan `exec()`!
 
-Diisi ya penjelasannya
-
+Diisi ya penjelasannya  
 Halaman 6 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf
-
 
 # Appendix
 ### Useful things
