@@ -1,9 +1,3 @@
-https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
-
-http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf
-
-http://www.linuxzasve.com/preuzimanje/TLCL-09.12.pdf
-
 # Modul 2
 Proses dan Daemon
 
@@ -257,3 +251,10 @@ man fopen
 man fclose
 man unistd.h
 ```
+
+### References
+https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet  
+https://notes.shichao.io/apue/  
+http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf  
+http://www.linuxzasve.com/preuzimanje/TLCL-09.12.pdf  
+
