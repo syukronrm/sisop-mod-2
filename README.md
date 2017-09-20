@@ -179,8 +179,9 @@ int main() {
   return 0;
 }
 ```
+
 __Explanation__
-  - 
+  - ....
 
 Lengkapi guys
 
@@ -197,7 +198,14 @@ __Contoh permasalahan:__
 Bagaimana cara menjalankan `ls -l /`, lalu menjalankan `mkdir ~/sisop` dalam satu program?
 
 __Solusi:__  
-Gunakan `fork()` dan `exec()`!
+Gunakan `fork()`, `exec()`, dan `wait()`!
+
+TL;DR.  
+Buat sebuah program dengan:  
+1. Buat proses baru dengan `fork()`
+2. Kalankan `exec("ls -l /")` pada child process
+3. Buat parent process menunggu (`wait`) hingga proses `exec()` pada child selesai
+4. Setelah child selesai, jalankan `exec("mkdir ~/sisop")` pada parent.
 
 Diisi ya penjelasannya  
 Halaman 6 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf
