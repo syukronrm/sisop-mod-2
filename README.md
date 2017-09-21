@@ -79,6 +79,7 @@ $ ps -e -o pid,ppid,command
  .......
  3760  2684 /usr/lib/x86_64-linux-gnu/notify-osd
  3789  2684 /opt/google/chrome/chrome
+25793  9789 ps -e -o pid,ppid,command
 ```
 
 __Explanation__
@@ -287,18 +288,36 @@ Example: [sample-fork-exec-wait.c](https://github.com/syukronrm/sisop-mod-2/blob
 
 ## 1.6 Jenis-Jenis Proses
 ### 1.6.1 Zombie Process
-Zombie process adalah
+Jika child process telah berhenti dan parent process memanggil function `wait`, maka child process akan hilang dan exit status dari child akan didapat dari pemanggilan function `wait`. Apa yang terjadi jika child process berhenti dan parent tidak memanggil `wait`? Apakah child process tersebut tetap hilang? Tidak, child process tersebut akan menjadi zombie process.
+
+```
+PID     PPID    STAT  COMMAND
+28621   31403   S+    ./sample-zombie-process
+28622   28621   Z+    [sample-zombie-p] <defunct>
+```
+
+Status dari zombie process adalah `Z` atau terdapat `<defunct>` di akhir commandnya.
+
+Example: [sample-zombie-process.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-zombie-process.c)
 
 ### 1.6.2 Orphan Process
-Orphan process adalah
+Orphan process adalah child process yang yang parent processnya telah berhenti.
+
+```
+PID    PPID     STAT  COMMAND
+    1     0     Ss    /sbin/init
+28369     1     S     ./sample-orphan-process
+```
+
+Example: [sample-orphan-process.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-orphan-process.c)
 
 ### 1.6.3 Daemon Process
-Daemon process adalah
-
+Daemon process adalah proses yang berjalan di balik layar (background) dan tidak dapat berinteraksi dengan user melalui standard input/output. Akan dijelaskan di bab selanjutnya.
 
 ## 2. Daemon
 ### 2.1 Daemon
-Daemon adalah 
+Daemon process adalah proses yang berjalan di balik layar (background) dan tidak dapat berinteraksi dengan user melalui standard input/output.
+
 ### 2.2 Membuat Daemon
 
 
@@ -306,12 +325,12 @@ Daemon adalah
 ### Useful things
 #### Get all libraries documentation (and functions)
 ```
-apt-get install manpages-posix-dev
+# apt-get install manpages-posix-dev
 
-man {anything-you-want-to-know}
-man fopen
-man fclose
-man unistd.h
+$ man {anything-you-want-to-know}
+$ man fopen
+$ man fclose
+$ man unistd.h
 ```
 
 ### References
