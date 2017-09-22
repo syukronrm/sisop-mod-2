@@ -35,7 +35,7 @@ init-+-acpid
 ```
 
 __Explanation__
-  - [pstree](https://linux.die.net/man/1/pstree): ...
+  - [pstree](https://linux.die.net/man/1/pstree): pstree berfungsi untuk menampilkan suatu proses dalam bentuk tree. Tree dari proses yang ditampilkan memiliki pid atau init (jika pid dihilangkan) sebagai root.
 
 Contoh program `demo-process.c`
 ```C
