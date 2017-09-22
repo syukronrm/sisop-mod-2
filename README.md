@@ -43,7 +43,7 @@ init-+-acpid
 ```
 
 __Explanation__
-  - [pstree](https://linux.die.net/man/1/pstree): pstree berfungsi untuk menampilkan suatu proses dalam bentuk tree. Tree dari proses yang ditampilkan memiliki pid atau init (jika pid dihilangkan) sebagai root.
+  - [pstree](https://linux.die.net/man/1/pstree): pstree berfungsi untuk menampilkan suatu proses dalam bentuk tree. Tree dari proses yang ditampilkan memiliki pid atau init (jika pid dihilangkan) sebagai root. 
 
 Contoh program `demo-process.c`
 ```C
@@ -196,6 +196,23 @@ Exec adalah function yang digunakan untuk menjalankan program baru dan mengganti
 Manual: `$ man 3 exec`
 
 Example: [exec-sample.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-exec.c)
+```C
+#include <stdio.h>
+#include <unistd.h>
+
+int main () {
+  
+  // argv[n] = { {your-program-name}, {argument[1]}, {argument[2]},.....,{argument[n-2]}, NULL }
+  char *argv[4] = {"mkdir:make-directory", "-l", "/", NULL};
+  
+  execvp("ls", argv);
+
+  printf("This line will not be executed\n");
+
+  return 0;
+}
+
+```
 
 #### C. `fork` and `exec`
 __Permasalahan:__
@@ -309,6 +326,29 @@ Status dari zombie process adalah `Z` atau terdapat `<defunct>` di akhir command
 
 Example: [sample-zombie-process.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-zombie-process.c)
 
+```C
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+int main () {
+  pid_t child_pid;
+  
+  /* Create a child process. */
+  child_pid = fork ();
+  if (child_pid > 0) {
+    /* This is the parent process. Sleep for a minute. */
+    sleep (60);
+  } else {
+    /* This is the child process. Exit immediately. */
+    exit (0);
+  }
+  
+  return 0;
+}
+
+```
+
 ### 1.6.2 Orphan Process
 Orphan process adalah child process yang yang parent processnya telah berhenti.
 
@@ -319,6 +359,28 @@ PID    PPID     STAT  COMMAND
 ```
 
 Example: [sample-orphan-process.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-orphan-process.c)
+```C
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+int main () {
+  pid_t child_pid;
+  
+  /* Create a child process. */
+  child_pid = fork ();
+  if (child_pid > 0) {
+    /* This is the parent process. Exit immediately. */
+    exit (0);
+  } else {
+    /* This is the child process. Sleep for a minute. */
+    sleep (60);
+  }
+  
+  return 0;
+}
+
+```
 
 ### 1.6.3 Daemon Process
 Daemon process adalah proses yang berjalan di balik layar (background) dan tidak dapat berinteraksi dengan user melalui standard input/output. Akan dijelaskan di bab selanjutnya.
