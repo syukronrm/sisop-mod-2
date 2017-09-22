@@ -132,9 +132,11 @@ TL;DR.
 `fork` digunakan untuk menduplikasi program yang sedang berjalan.  
 `exec` digunakan untuk mengganti program yang sedang berjalan dengan program yang baru.  
 
-#### A. `fork` explained
+#### A. `fork`
 
 Ketika `fork` dijalankan, proses baru yang disebut _child process_ akan dibuat. _Parent process_ tetap berjalan dan _child process_ mulai dibuat dan berjalan ketika function `fork` dipanggil.
+
+Setelah `fork` dipanggil, kita tidaklah tahu proses manakah yang pertama selesai.
 
 ```C
 int main() { 
@@ -180,15 +182,14 @@ __Explanation__
 
 Lengkapi guys
 
-#### B. `exec` explained
+#### B. `exec`
+Exec adalah function yang digunakan untuk menjalankan program baru dan mengganti program yang sedang berlangsung. `exec` adalah program family yang memiliki berbagai fungsi variasi, yaitu `execvp`, `execlp`, `execv`, dan lain lain.
 
-
-Diisi ya penjelasannya  
-Halaman 6 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf
+Manual: `$ man 3 exec`
 
 Example: [exec-sample.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-exec.c)
 
-#### C. `fork` and `exec` explained!
+#### C. `fork` and `exec`
 __Permasalahan:__
 Bagaimana cara menjalankan dua proses dalam satu program?
 
@@ -229,7 +230,7 @@ Visualisasi
 
 Example: [sample-fork-exec.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-fork-exec.c)
 
-#### D. `wait` explained!
+#### D. `wait`
 
 `wait` adalah function yang digunakan untuk memblock program yang sedang berjalan hingga proses child processnya berhenti.
 
@@ -318,12 +319,136 @@ Daemon process adalah proses yang berjalan di balik layar (background) dan tidak
 ### 2.1 Daemon
 Daemon process adalah proses yang berjalan di balik layar (background) dan tidak dapat berinteraksi dengan user melalui standard input/output.
 
-### 2.2 Membuat Daemon
+### 2.2 Cara Membuat Daemon
+Daemon dapat dibuat dalam beberapa langkah:
+1. Melakukan fork pada parent process dan menghentikan parent process
+2. Mengubah mode file dengan `umask`
+3. Mengubah unique session ID
+4. Mengubah direktori kerja
+5. Menutup file descriptor
+6. Membuat loop utama program
 
+### 2.3 Proses pembuatan daemon
+#### 2.3.1 Melakukan fork pada parent process dan menghentikan parent process
+Langkah pertama adalah melakukan forking untuk membuat process baru
+kemudian mematikan Parent Process. Process induk yang mati akan membuat system mengira proses telah selesai sehingga akan kembali ke terminal user. Proses anak yang melanjutkan program setelah proses induk dimatikan.
+```C
+pid_t pid;
+pid = fork();
+
+if (pid < 0) {
+  exit(EXIT_FAILURE);
+}
+
+if (pid > 0) {
+
+  // simpan PID dari child proces
+
+  exit(EXIT_SUCCESS);
+}
+```
+
+#### 2.3.2 Mengubah mode file dengan `umask`
+Untuk menulis beberapa file (termasuk logs) yang dibuat oleh daemon, mode file harus diubah untuk memastikan bahwa file tersebut dapat ditulis dan dibaca secara benar. Pengubahan mode file menggunakan implementasi umask().
+```C
+umask(0);
+```
+
+#### 2.3.3 Mengubah unique session ID
+Child Process harus memiliki unik SID dari kernel untuk dapat beroperasi. Sebaliknya, Child process menjadi Orphan Proses pada system. Tipe pid_t yang dideklarasikan pada bagian sebelumnya, juga digunakan untuk membuat SID baru untuk child process. Pembuatan SID baru menggunakan implementasi setsid(). Fungsi setsid() memiliki return tipe yang sama seperti fork().
+
+```C
+sid = setsid();
+
+if (sid < 0) {
+  exit(EXIT_FAILURE);
+}
+```
+
+#### 2.3.4 Mengubah direktori kerja
+Directori kerja yang aktif harus diubah ke suatu tempat yang telah pasti akan selalu ada. Pengubahan tempat direktori kerja dapat dilakukan dengan implementasi fungsi `chdir`. Fungsi `chdir` mengembalikan nilai -1 jika gagal.
+
+```C
+
+if ((chdir("/)) < 0) {
+  exit(EXIT_FAILURE);
+}
+```
+
+#### 2.3.5 Menutup file descriptor
+Salah satu dari langkah terakhir dalam mengeset daemon adalah menutup file descriptor standar (STDIN, STDOUT, STDERR). Karena daemon tidak perlu menggunakan kendali terminal, file descriptor dapat berulang dan berpotensi memiliki bahaya dalam hal keamanan. Untuk mengatasi hal tersebut maka digunakan implemtasi fungsi close().
+
+```C
+close(STDIN_FILENO);
+close(STDOUT_FILENO);
+close(STDERR_FILENO);
+```
+
+#### 2.3.6 Membuat loop utama program
+Daemon bekerja terus menerus, sehingga diperlukan sebuah looping.
+
+```C
+while(1) {
+  // daemon program
+  sleep(30);
+}
+
+exit(EXIT_SUCCESS);
+```
+
+
+### 2.4 Contoh Implementasi Daemon
+```C
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <syslog.h>
+#include <string.h>
+
+int main() {
+  pid_t pid, sid;
+
+  pid = fork();
+
+  if (pid < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  if (pid > 0) {
+    exit(EXIT_SUCCESS);
+  }
+
+  umask(0);
+
+  sid = setsid();
+
+  if (sid < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  if ((chdir("/")) < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  close(STDIN_FILENO);
+  close(STDOUT_FILENO);
+  close(STDERR_FILENO);
+
+  while(1) {
+    // main program here
+    sleep(30);
+  }
+  
+  exit(EXIT_SUCCESS);
+}
+```
 
 # Appendix
-### Useful things
-#### Get all libraries documentation (and functions)
+### Libraries documentation (and functions) :sparkles: :sparkles: :camel:
 ```
 # apt-get install manpages-posix-dev
 
@@ -333,7 +458,7 @@ $ man fclose
 $ man unistd.h
 ```
 
-### References
+### References 
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet  
 https://notes.shichao.io/apue/  
 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf  
