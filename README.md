@@ -3,6 +3,14 @@ Proses dan Daemon
 
 ## 1 Process
 
+Objectives:
+1. Peserta mengetahui proses
+2. Peserta memahami bagaimana proses bekerja
+3. Peserta memahami bagaimana cara membuat proses
+4. Peserta mengerti jenis-jenis proses
+5. Peserta bisa memahami proses
+6. Peserta mampu membuat proses daemon
+
 ### 1.1 Process
 TL; DR.
 
