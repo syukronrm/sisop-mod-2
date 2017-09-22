@@ -1,7 +1,7 @@
 # Modul 2
 Proses dan Daemon
 
-##### PreModul 2
+##### PraModul 2
 
 Requirement:
 1. Linux
@@ -69,9 +69,9 @@ Hasil
 The process ID is 8295
 The parent process ID is 29043
 ```
-__Explanation__
-  - getpid(): ...
-  - getppid(): ...
+__Penjelasan__
+  - getpid(): digunakan untuk memunculkan *process ID* dari proses yang dipanggil.
+  - getppid(): digunakan untuk memunculkan *process ID* dari **parent** proses proses yang dipanggil
 
 
 ### 1.3 Melihat Proses
@@ -98,10 +98,10 @@ $ ps -e -o pid,ppid,command
 25793  9789 ps -e -o pid,ppid,command
 ```
 
-__Explanation__
-  - ps: ...
-  - -e: ...
-  - -o: ...
+__Penjelasan__
+  - ps: menampilkan rincian dari proses yang sedang berjalan.
+  - -e: memilih seluruh proses yang sedang berjalan.
+  - -o: format yang ditentukan user.
 
 
 ### 1.4 Membunuh Proses
@@ -193,7 +193,7 @@ int main() {
 }
 ```
 
-__Explanation__
+__Penjelasan__
   - ....
 
 Lengkapi guys
