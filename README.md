@@ -1,6 +1,14 @@
 # Modul 2
 Proses dan Daemon
 
+##### PreModul 2
+
+Requirement:
+1. Linux
+2. gcc / g++
+
+Tutorial compiling C code: [here](https://github.com/syukronrm/sisop-mod-2/blob/master/compiling-c-program.md)
+
 ## 1 Process
 
 Objectives:
