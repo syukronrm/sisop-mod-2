@@ -99,9 +99,9 @@ $ ps -e -o pid,ppid,command
 ```
 
 __Penjelasan__
-  - ps: menampilkan rincian dari proses yang sedang berjalan.
-  - -e: memilih seluruh proses yang sedang berjalan.
-  - -o: format yang ditentukan user.
+  - ps  : menampilkan rincian dari proses yang sedang berjalan.
+  - -e  : memilih seluruh proses yang sedang berjalan.
+  - -o  : format yang ditentukan user.
 
 
 ### 1.4 Membunuh Proses
@@ -111,7 +111,15 @@ Contoh:
 ```
 $ kill 3789
 ```
+terdapat beberapa macam signal yang digunakan dalam command kill, antara lain sebagi berikut :
 
+| Signal name | Signal value  | Effect       |
+| ------------|:-------------:| -------------|
+| SIGHUP      | 1             | Hangup         |
+| SIGINT      | 2             | Interrupt from keyboard  |
+| SIGKILL     | 9             | Kill signal   |
+| SIGTERM     | 15            | Termination signal
+| SIGSTOP     | 17,19,23      | Stop the process
 ### 1.5 Membuat Proses
 Proses dapat dibuat menggunakan dua cara (pada C), yaitu dengan `system()` atau `fork` & `exec`
 
