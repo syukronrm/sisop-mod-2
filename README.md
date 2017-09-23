@@ -32,7 +32,7 @@ $ xlogo
 ```
 
 ### 1.2 Process ID
-Setiap proses memiliki dikenali dengan _Process ID_/_pid_. Setiap proses memiliki _Parent Process ID_/_ppid_, kecuali proses `init` atau `systemd`. 
+Setiap proses memiliki identitas yang dikena dengan _Process ID_/_pid_. Setiap proses memiliki _Parent Process ID_/_ppid_, kecuali proses `init` atau `systemd`. 
 
 Jalankan: 
 ```
@@ -71,7 +71,7 @@ The parent process ID is 29043
 ```
 __Penjelasan__
   - getpid(): digunakan untuk memunculkan *process ID* dari proses yang dipanggil.
-  - getppid(): digunakan untuk memunculkan *process ID* dari **parent** proses proses yang dipanggil
+  - getppid(): digunakan untuk memunculkan *process ID* dari **parent** proses yang dipanggil
 
 
 ### 1.3 Melihat Proses
