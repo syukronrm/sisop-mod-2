@@ -1,4 +1,18 @@
-# Modul 2
+```
+ ##     ##  #######  ########  ##     ## ##           #######  
+ ###   ### ##     ## ##     ## ##     ## ##          ##     ## 
+ #### #### ##     ## ##     ## ##     ## ##                 ## 
+ ## ### ## ##     ## ##     ## ##     ## ##           #######  
+ ##     ## ##     ## ##     ## ##     ## ##          ##        
+ ##     ## ##     ## ##     ## ##     ## ##          ##        
+ ##     ##  #######  ########   #######  ########    ######### 
+
+      +-++-++-++-++-++-+ +-++-++-+ +-++-++-++-++-++-+
+      |P||r||o||s||e||s| |d||a||n| |D||a||e||m||o||n|
+      +-++-++-++-++-++-+ +-++-++-+ +-++-++-++-++-++-+
+
+```
+
 Proses dan Daemon
 
 ##### PraModul 2
@@ -22,21 +36,28 @@ Objectives:
 ### 1.1 Process
 TL; DR.
 
-Program yang sedang berjalan disebut dengan proses. 
+Setiap program yang sedang berjalan disebut dengan proses. Proses dapat berjalan secara _foreground_ atau _background_. 
 
-Jika kamu mempunyai dua program yang tampil pada monitor, berarti terdapat dua proses yang sedang berjalan. Proses yang dijalankan pada terminal (shell) akan menghentikan proses shell, kemudian setelah proses selesai, shell akan dijalankan kembali.
-
-Jalankan:
-```
-$ xlogo
-```
+Jalankan `$ ps -e` untuk melihat semua proses yang sedang berjalan.
 
 ### 1.2 Process ID
-Setiap proses memiliki identitas yang dikena dengan _Process ID_/_pid_. Setiap proses memiliki _Parent Process ID_/_ppid_, kecuali proses `init` atau `systemd`. 
-
-Jalankan: 
+Proses-proses dapat diibaratkan seperti orang tua (_parent_) dengan anak (_child_) yang turun temurun.
+- Setiap proses memiliki parent dan child.
+- Setiap proses memiliki ID (_pid_) dan parent ID (_ppid_), kecuali proses `init` atau `systemd`.
+- _ppid_ dari sebuah proses adalah ID dari parent proses tersebut. Perhatikan _ascii art_ dibawah:
 ```
-$ pstree
+ [Parent]           [Child]
++--------+        +--------+ 
+| pid=7  |        | pid=10 |
+| ppid=4 |------->| ppid=7 |
+| bash   |        | nano   |  
++--------+        +--------+
+```
+Perhatikan, ppid dari proses `nano` adalah pid dari proses `bash`.
+
+Untuk memvisualisasikan semua hierarki parent-child, jalankan
+```
+$ pstree | less
 ```
 ```
 init-+-acpid
@@ -51,7 +72,7 @@ init-+-acpid
 ```
 
 __Explanation__
-  - [pstree](https://linux.die.net/man/1/pstree): pstree berfungsi untuk menampilkan suatu proses dalam bentuk tree. Tree dari proses yang ditampilkan memiliki pid atau init (jika pid dihilangkan) sebagai root. 
+  - [pstree](http://man7.org/linux/man-pages/man1/pstree.1.html): pstree berfungsi untuk menampilkan suatu proses dalam bentuk tree. Tree dari proses yang ditampilkan memiliki pid atau init (jika pid dihilangkan) sebagai root. 
 
 Contoh program `demo-process.c`
 ```C
@@ -121,17 +142,17 @@ terdapat beberapa macam signal yang digunakan dalam command kill, antara lain se
 | SIGTERM     | 15            | Termination signal
 | SIGSTOP     | 17,19,23      | Stop the process
 ### 1.5 Membuat Proses
-Proses dapat dibuat menggunakan dua cara (pada C), yaitu dengan `system()` atau `fork` & `exec`. `fork` dan `exec` adalah bagian dari system call, sedangkan `system` bukan.
+Proses dapat dibuat menggunakan dua cara (pada C), yaitu dengan `system()` atau `fork` & `exec`. `fork` dan `exec` adalah bagian dari [system call](http://man7.org/linux/man-pages/man2/syscalls.2.html), sedangkan `system` bukan.
 
 #### 1.5.1 Menggunakan `fork` dan `exec`
    
-TL;DR.
+TL;DR.  
 `fork` digunakan untuk menduplikasi program yang sedang berjalan.  
 `exec` digunakan untuk mengganti program yang sedang berjalan dengan program yang baru.
 
 #### A. `fork`
 
-Ketika `fork` dijalankan, proses baru yang disebut _child process_ akan dibuat. _Parent process_ tetap berjalan dan _child process_ mulai dibuat dan berjalan ketika function `fork` dipanggil. Spesifikasi `fork` bisa dilihat dengan `$ man 2 fork` atau di [sini](http://man7.org/linux/man-pages/man2/fork.2.html).
+`fork` digunakan untuk menduplikasi proses. Proses yang baru disebut dengan _child_ proses, sedangkan proses pemanggil disebut dengan _parent_ proses. Spesifikasi `fork` bisa dilihat dengan `$ man 2 fork` atau di [sini](http://man7.org/linux/man-pages/man2/fork.2.html).
 
 Setelah `fork` dipanggil, kita tidaklah tahu proses manakah yang pertama selesai.
 
@@ -184,11 +205,6 @@ int main() {
   return 0;
 }
 ```
-
-__Penjelasan__
-  - ....
-
-Lengkapi guys
 
 #### B. `exec`
 Exec adalah function yang digunakan untuk menjalankan program baru dan mengganti program yang sedang berlangsung. `exec` adalah program family yang memiliki berbagai fungsi variasi, yaitu `execvp`, `execlp`, `execv`, dan lain lain.
@@ -257,7 +273,9 @@ Example: [sample-fork-exec.c](https://github.com/syukronrm/sisop-mod-2/blob/mast
 
 #### D. `wait`
 
-`wait` adalah function yang digunakan untuk memblock program yang sedang berjalan hingga proses child processnya berhenti.
+`wait` adalah function yang digunakan untuk mendapatkan informasi ketika child proses berganti _state_-nya. Pergantian state dapat berupa _termination_, _resume_, atau _stop_. Pada modul ini, kita hanya menggunakan `wait` untuk menangkap state _termination_.
+
+Fungsi `wait` pada parent process juga berguna untuk menangkap exit status dari child.
 
 __Permasalahan:__  
 Bagaimana cara membuat program yang menjalankan suatu proses tanpa menghentikan program?
@@ -314,9 +332,11 @@ Example: [sample-fork-exec-wait.c](https://github.com/syukronrm/sisop-mod-2/blob
 
 #### 1.5.2 Menggunakan `system`
    
-Ketika [system](https://linux.die.net/man/3/system) dijalankan, program hanya memanggil _external command_ (kalau di Ubuntu berupa program `/bin/bash`). Penggunaan `system` sangat tergantung pada environment.
+Ketika [system](http://man7.org/linux/man-pages/man3/system.3.html) dijalankan, program hanya memanggil _external command_ (kalau di Ubuntu berupa program `/bin/bash`). Penggunaan `system` sangat tergantung pada environment. 
 
-Meskipun mudah digunakan, tidak disarankan menggunakan fungsi `system`.
+Contoh, ketika user menjalankan `system("ls -l")`, ini sama seperti menjalankan `$ ls -l` pada bash.
+
+Meskipun mudah digunakan, tidak disarankan menggunakan fungsi `system` karena beberapa asalan:
 
 ```
 $ man system
@@ -358,6 +378,7 @@ drwxr-xr-x   3 root root  4096 Sep 12 19:11 data
 
 ## 1.6 Jenis-Jenis Proses
 ### 1.6.1 Zombie Process
+
 Jika child process telah berhenti dan parent process memanggil function `wait`, maka child process akan hilang dan exit status dari child akan didapat dari pemanggilan function `wait`. Apa yang terjadi jika child process berhenti dan parent tidak memanggil `wait`? Apakah child process tersebut tetap hilang? Tidak, child process tersebut akan menjadi zombie process.
 
 ```
@@ -385,12 +406,12 @@ int main () {
     exit(EXIT_FAILURE);
   }
   
-  if (child_pid > 0) {
-    /* This is the parent process. Sleep for a minute. */
-    sleep (60);
-  } else {
+  if (child_pid == 0) {
     /* This is the child process. Exit immediately. */
     exit (0);
+  } else {
+    /* This is the parent process. Sleep for a minute. */
+    sleep (60);
   }
   
   return 0;
@@ -423,12 +444,12 @@ int main () {
     exit(EXIT_FAILURE);
   }
   
-  if (child_pid > 0) {
-    /* This is the parent process. Exit immediately. */
-    exit (0);
-  } else {
+  if (child_pid == 0) {
     /* This is the child process. Sleep for a minute. */
     sleep (60);
+  } else {
+    /* This is the parent process. Exit immediately. */
+    exit (0);
   }
   
   return 0;
