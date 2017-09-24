@@ -141,6 +141,9 @@ terdapat beberapa macam signal yang digunakan dalam command kill, antara lain se
 | SIGKILL     | 9             | Kill signal   |
 | SIGTERM     | 15            | Termination signal
 | SIGSTOP     | 17,19,23      | Stop the process
+
+Secara default, `$ kill` menggunakan signal SIGTERM. Untuk menggunakan signal tertentu, gunakan `$ kill -{signal value} {pid}`. Contoh, `$ kill -9 3789` untuk menggunakan SIGKILL.
+
 ### 1.5 Membuat Proses
 Proses dapat dibuat menggunakan dua cara (pada C), yaitu dengan `system()` atau `fork` & `exec`. `fork` dan `exec` adalah bagian dari [system call](http://man7.org/linux/man-pages/man2/syscalls.2.html), sedangkan `system` bukan.
 
