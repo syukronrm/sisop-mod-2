@@ -121,46 +121,29 @@ terdapat beberapa macam signal yang digunakan dalam command kill, antara lain se
 | SIGTERM     | 15            | Termination signal
 | SIGSTOP     | 17,19,23      | Stop the process
 ### 1.5 Membuat Proses
-Proses dapat dibuat menggunakan dua cara (pada C), yaitu dengan `system()` atau `fork` & `exec`
+Proses dapat dibuat menggunakan dua cara (pada C), yaitu dengan `system()` atau `fork` & `exec`. `fork` dan `exec` adalah bagian dari system call, sedangkan `system` bukan.
 
-#### 1.5.1 Menggunakan `system()`
+#### 1.5.1 Menggunakan `fork` dan `exec`
    
-Ketika `system()` dijalankan, ia akan memanggil standard shell (`/bin/bash`) dan menjalankan perintah yang diminta.
-
-Contoh
-
-```C
-#include <stdlib.h>
-
-int main() {
-  int return_value;
-  return_value = system("ls -l /");
-  return return_value;
-}
-```
-   
-Hasil
-   
-```
-total 156
-drwxr-xr-x   2 root root  4096 Sep 14 06:35 bin
-drwxr-xr-x   4 root root  4096 Sep 20 00:24 boot
-drwxrwxr-x   2 root root  4096 Agu 14 14:05 cdrom
-drwxr-xr-x   3 root root  4096 Sep 12 19:11 data
-(long list)
-```
-
-#### 1.5.2 Menggunakan `fork` dan `exec`
-   
-TL;DR.  
+TL;DR.
 `fork` digunakan untuk menduplikasi program yang sedang berjalan.  
-`exec` digunakan untuk mengganti program yang sedang berjalan dengan program yang baru.  
+`exec` digunakan untuk mengganti program yang sedang berjalan dengan program yang baru.
 
 #### A. `fork`
 
-Ketika `fork` dijalankan, proses baru yang disebut _child process_ akan dibuat. _Parent process_ tetap berjalan dan _child process_ mulai dibuat dan berjalan ketika function `fork` dipanggil.
+Ketika `fork` dijalankan, proses baru yang disebut _child process_ akan dibuat. _Parent process_ tetap berjalan dan _child process_ mulai dibuat dan berjalan ketika function `fork` dipanggil. Spesifikasi `fork` bisa dilihat dengan `$ man 2 fork` atau di [sini](http://man7.org/linux/man-pages/man2/fork.2.html).
 
 Setelah `fork` dipanggil, kita tidaklah tahu proses manakah yang pertama selesai.
+
+```
+$ man 2 fork
+....
+RETURN VALUE
+       On success, the PID of the child process is returned in the parent,
+       and 0 is returned in the child.  On failure, -1 is returned in the
+       parent, no child process is created, and errno is set appropriately.
+....
+```
 
 ```C
 int main() { 
@@ -177,6 +160,7 @@ int main() {
   return 0;
 }
 ```
+Perhatikan, ppid child proses sama dengan pid parent process.
 
 Real code:
 ```C
@@ -219,9 +203,9 @@ Example: [exec-sample.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sa
 int main () {
   
   // argv[n] = { {your-program-name}, {argument[1]}, {argument[2]},.....,{argument[n-2]}, NULL }
-  char *argv[4] = {"mkdir:make-directory", "-l", "/", NULL};
+  char *argv[4] = {"list", "-l", "/", NULL};
   
-  execvp("ls", argv);
+  execv("/bin/ls", argv);
 
   printf("This line will not be executed\n");
 
@@ -328,6 +312,50 @@ Visualisasi
 
 Example: [sample-fork-exec-wait.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-fork-exec-wait.c)
 
+#### 1.5.2 Menggunakan `system`
+   
+Ketika [system](https://linux.die.net/man/3/system) dijalankan, program hanya memanggil _external command_ (kalau di Ubuntu berupa program `/bin/bash`). Penggunaan `system` sangat tergantung pada environment.
+
+Meskipun mudah digunakan, tidak disarankan menggunakan fungsi `system`.
+
+```
+$ man system
+
+  ....
+  NOTES
+  system() provides simplicity and convenience: it handles  all
+  of  the details of calling fork(2), execl(3), and waitpid(2),
+  as well as the necessary manipulations of signals.
+
+  Do not use system() from a program with set-user-ID  or  set-
+  group-ID privileges, because strange values for some environ‐
+  ment variables might be used  to  subvert  system  integrity.
+  ...
+```
+
+Contoh
+
+```C
+#include <stdlib.h>
+
+int main() {
+  int return_value;
+  return_value = system("ls -l /");
+  return return_value;
+}
+```
+   
+Hasil
+   
+```
+total 156
+drwxr-xr-x   2 root root  4096 Sep 14 06:35 bin
+drwxr-xr-x   4 root root  4096 Sep 20 00:24 boot
+drwxrwxr-x   2 root root  4096 Agu 14 14:05 cdrom
+drwxr-xr-x   3 root root  4096 Sep 12 19:11 data
+(long list)
+```
+
 ## 1.6 Jenis-Jenis Proses
 ### 1.6.1 Zombie Process
 Jika child process telah berhenti dan parent process memanggil function `wait`, maka child process akan hilang dan exit status dari child akan didapat dari pemanggilan function `wait`. Apa yang terjadi jika child process berhenti dan parent tidak memanggil `wait`? Apakah child process tersebut tetap hilang? Tidak, child process tersebut akan menjadi zombie process.
@@ -352,6 +380,11 @@ int main () {
   
   /* Create a child process. */
   child_pid = fork ();
+  
+  if (pid < 0) {
+    exit(EXIT_FAILURE);
+  }
+  
   if (child_pid > 0) {
     /* This is the parent process. Sleep for a minute. */
     sleep (60);
@@ -385,6 +418,11 @@ int main () {
   
   /* Create a child process. */
   child_pid = fork ();
+  
+  if (pid < 0) {
+    exit(EXIT_FAILURE);
+  }
+  
   if (child_pid > 0) {
     /* This is the parent process. Exit immediately. */
     exit (0);
