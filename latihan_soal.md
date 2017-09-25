@@ -6,6 +6,3 @@ agar bisa print angka 0-199 secara berurutan.
 Buatlah sebuah daemon yang dapat menghapus file berekstensi .trash pada folder 
 /tmp/modul2 tiap 30 detik sekali. Namun daemon akan berhenti berjalan apabila 
 ada file stop.trash!
-
-## Latihan 3
-
