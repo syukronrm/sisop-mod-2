@@ -334,7 +334,33 @@ Visualisasi
 ```
 
 Example: [sample-fork-exec.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-fork-exec.c)
+```C
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
 
+int main() {
+  pid_t child_id;
+
+  child_id = fork();
+  
+  if (pid < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  if (child_id == 0) {
+    // this is child
+    
+    char *argv[] = {"mkdir", "sample-dir", NULL};
+    execv("/bin/mkdir", argv);
+  } else {
+    // this is parent
+  
+    char *argv[] = {"touch", "sample-touch.txt", NULL};
+    execv("/usr/bin/touch", argv);
+  }
+}
+```
 #### D. `wait`
 
 `wait` adalah function yang digunakan untuk mendapatkan informasi ketika child proses berganti _state_-nya. Pergantian state dapat berupa _termination_, _resume_, atau _stop_. Pada modul ini, kita hanya menggunakan `wait` untuk menangkap state _termination_.
@@ -393,7 +419,33 @@ Visualisasi
 ```
 
 Example: [sample-fork-exec-wait.c](https://github.com/syukronrm/sisop-mod-2/blob/master/sample-fork-exec-wait.c)
+```C
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <unistd.h>
 
+int main() {
+  pid_t child_id;
+  int status;
+
+  child_id = fork();
+
+  if (child_id == 0) {
+    // this is child
+
+    char *argv[4] = {"mkdir", "-p", "sample-dir", NULL};
+    execv("/bin/mkdir", argv);
+  } else {
+    // this is parent
+
+    // the parent waits for all the child processes
+    while ((wait(&status)) > 0);
+
+    char *argv[3] = {"touch", "sample-dir/sample-touch.txt", NULL};
+    execv("/usr/bin/touch", argv);
+  }
+}
+```
 #### 1.5.2 Menggunakan `system`
    
 Ketika [system](http://man7.org/linux/man-pages/man3/system.3.html) dijalankan, program hanya memanggil _external command_ (kalau di Ubuntu berupa program `/bin/bash`). Penggunaan `system` sangat tergantung pada environment. 
