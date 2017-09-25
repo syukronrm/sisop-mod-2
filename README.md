@@ -558,7 +558,7 @@ int main () {
   /* Create a child process. */
   child_pid = fork ();
   
-  if (pid < 0) {
+  if (child_pid < 0) {
     exit(EXIT_FAILURE);
   }
   
