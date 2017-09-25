@@ -382,7 +382,7 @@ drwxr-xr-x   3 root root  4096 Sep 12 19:11 data
 ## 1.6 Jenis-Jenis Proses
 ### 1.6.1 Zombie Process
 
-Jika child process telah berhenti dan parent process memanggil function `wait`, maka child process akan hilang dan exit status dari child akan didapat dari pemanggilan function `wait`. Apa yang terjadi jika child process berhenti dan parent tidak memanggil `wait`? Apakah child process tersebut tetap hilang? Tidak, child process tersebut akan menjadi zombie process.
+Zombie proses adalah child proses yang telah selesai mengerjakan tugasnya, namun belum ditangkap oleh parentnya dengan fungsi `wait`.
 
 ```
 PID     PPID    STAT  COMMAND
