@@ -186,6 +186,51 @@ int main() {
 ```
 Perhatikan, ppid child proses sama dengan pid parent process.
 
+```C
++-------------------------+
+|   Parent Process        |
++-------------------------+
+|   int main() {          |
+|     pid_t pid,          |
+|           child_id,     |
+|           ppid;         |
+|                         |
+|-->  child_id = fork();  |
+|     pid = getpid();     |
+|     ppid = getppid();   |
+|   }                     |
++-------------------------+
+|    pid = undefined      |
+|    child_id = undefined |
+|    ppid = undefined     |
++-------------------------+
+         |\
+         | \----------------------------------\
+         |                                     |
+         V                                     V
++-------------------------+        +-------------------------+
+|   Parent Process        |        |     Child Process       |
++-------------------------+        +-------------------------+
+|   int main() {          |        |   int main() {          |
+|     pid_t pid,          |        |     pid_t pid,          |
+|           child_id,     |        |           child_id,     |
+|           ppid;         |        |           ppid;         |
+|                         |        |                         |
+|     child_id = fork();  |        |     child_id = fork();  |
+|     pid = getpid();     |        |     pid = getpid();     |
+|-->  ppid = getppid();   |        |-->  ppid = getppid();   |
+|   }                     |        |   }                     |
++-------------------------+        +-------------------------+
+|    pid = 23             |        |    pid = 30             |
+|    child_id = 30        |        |    child_id = 0         |
+|    ppid = 10            |        |    ppid = 23            |
++-------------------------+        +-------------------------+
+```
+Perhatikan, bahwa;
+- `pid` Parent Process        == `ppid` Child 
+- `child_id` Parent Process   == `pid` Child Process
+
+
 Real code:
 ```C
 #include <stdio.h>
@@ -193,16 +238,18 @@ Real code:
 #include <unistd.h>
 
 int main() {
-  pid_t child_pid;
+  pid_t child_id;
 
-  printf("The main program PID is %d\n\n", (int) getpid());
+  printf("This is the main program, with PID = %d, Child's ID = %d, Parent ID = %d\n", 
+      (int) getpid(), (int) child_id, (int) getppid());
 
-  child_pid = fork();
-  if (child_pid != 0) {
-    printf("This is the parent process, with PID %d\n", (int) getpid());
-    printf("The child's PID is %d\n", (int) child_pid);
+  child_id = fork();
+  if (child_id != 0) {
+    printf("This is the parent process, with PID = %d, Child's ID = %d, Parent ID = %d\n", 
+      (int) getpid(), (int) child_id, (int) getppid());
   } else {
-    printf("This is the child process, with PID %d\n", (int) getpid());
+    printf("This is the child process, with PID = %d, Child's ID = %d, Parent ID = %d\n", 
+      (int) getpid(), (int) child_id, (int) getppid());
   }
 
   return 0;
