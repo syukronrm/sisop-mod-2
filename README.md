@@ -97,6 +97,7 @@ Contoh program `demo-process.c`
 int main() {
   printf("The process ID is %d\n", (int) getpid());
   printf("The parent process ID is %d\n", (int) getppid());
+  sleep(100);
   return 0;
 }
 ```
