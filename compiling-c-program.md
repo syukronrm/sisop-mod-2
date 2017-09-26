@@ -2,12 +2,12 @@
 
 ### Program Code
 
-`my-program.c`
+`hello-world.c`
 ```C
 #include <stdio.h>
 
 int main(){
-  printf("Hello World!");
+  printf("Hello World!\n");
   return 0;
 }
 ```
@@ -17,12 +17,12 @@ int main(){
 `gcc -o {outfile} {infile}`
 
 ```bash
-$ gcc -o program my-program.c
+$ gcc -o hello-world hello-world.c
 ```
 
 ### Execute
 ```
-$ ./program
+$ ./hello-world
 ```
 
 ### Result
