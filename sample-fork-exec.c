@@ -7,7 +7,7 @@ int main() {
 
   child_id = fork();
   
-  if (pid < 0) {
+  if (child_id < 0) {
     exit(EXIT_FAILURE);
   }
 
