@@ -731,6 +731,15 @@ Buatlah sebuah daemon yang dapat menghapus file berekstensi .trash pada folder
 /tmp/modul2 tiap 30 detik sekali. Namun daemon akan berhenti berjalan apabila 
 ada file stop.trash!
 
+#### Latihan 3
+
+Terdapat file [dmesg.log](https://github.com/syukronrm/sisop-mod-2/blob/master/dmesg.log).
+Buatlah duplikat file tersebut dengan nama `logku.txt`.  
+Hint: gunakan `fork`, `exec` dan perintah `cp`.
+
+Setelah itu buatlah file `wlan0.log` berisi semua baris pada `logku.txt` yang mengandung string `wlan0`.  
+Hint: gunakan `fopen`.
+
 ### References 
 https://notes.shichao.io/apue/  
 http://advancedlinuxprogramming.com/alp-folder/alp-ch03-processes.pdf  
