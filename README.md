@@ -731,6 +731,16 @@ Buatlah sebuah daemon yang dapat menghapus file berekstensi .trash pada folder
 /tmp/modul2 tiap 30 detik sekali. Namun daemon akan berhenti berjalan apabila 
 ada file stop.trash!
 
+#### Latihan 3
+Terdapat file [dmesg](https://github.com/syukronrm/sisop-mod-2/blob/master/dmesg.log).
+Kamu ingin mencari data log dari device `wlan0` pada file tersebut. Buatlah proses yang membuat 
+file `wlan0.log`. File `wlan0.log` tersebut yang berisi semua baris dari file `dmesg.txt` yang 
+mengandung string `wlan0`.
+
+Setelah file `wlan0.log` terbuat, buatlah file `pcku.log`, berisi semua baris pada `wlan0.log` 
+yang mengandung string MAC Address `4c:5e:0c:9d:fb:ff`.
+
+Implementasikan `fork` dan `exec`.
 
 ### References 
 https://notes.shichao.io/apue/  
