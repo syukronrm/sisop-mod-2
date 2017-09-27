@@ -632,7 +632,7 @@ Directori kerja yang aktif harus diubah ke suatu tempat yang telah pasti akan se
 
 ```C
 
-if ((chdir("/)) < 0) {
+if ((chdir("/")) < 0) {
   exit(EXIT_FAILURE);
 }
 ```
